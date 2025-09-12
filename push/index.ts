@@ -69,6 +69,7 @@ if (!(await file(tarFile).exists())) {
 
   console.log(`Image saved as ${tarFile}, extracting...`);
 
+  await rm(imagePath, { recursive: true, force: true }).catch(() => {});
   await mkdir(imagePath);
 
   const result = await extract({

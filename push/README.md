@@ -12,8 +12,11 @@ bun install
 Then:
 
 ```bash
+export IMAGE_URI="YOUR_IMAGE_URI"
+export PASSWORD_REGISTRY="YOUR_PASSWORD"
+export USERNAME_REGISTRY="YOUR_USERNAME"
 docker tag my-image:latest $IMAGE_URI
-echo $PASSWORD | USERNAME_REGISTRY=<your-configured-username> bun run index.ts $IMAGE_URI
+echo $PASSWORD_REGISTRY | USERNAME_REGISTRY=$USERNAME_REGISTRY bun run index.ts $IMAGE_URI
 ```
 
 ## How does it work
