@@ -5,36 +5,28 @@ import stream from "node:stream";
 import { mkdir } from "node:fs/promises";
 
 const username = process.env["USERNAME_REGISTRY"];
-async function read(stream: stream.Readable): Promise<string> {
-  const chunks = [];
-  for await (const chunk of stream.iterator()) {
-    chunks.push(chunk);
-  }
-
-  return Buffer.concat(chunks).toString("utf8");
-}
-
-let password;
-if (process.stdin.isTTY) {
-  console.error(
-    "You need to pass the password with a pipe operator \n\n\t'echo <YOURPASSWORD> | USERNAME_REGISTRY=... bun run index.ts'\n",
-  );
-} else {
-  password = (await read(process.stdin)).trim();
-}
+const password = process.env["PASSWORD_REGISTRY"];
 
 if (!username || !password) {
-  console.error("Username or password not defined, push won't be able to authenticate with registry");
+  console.error("USERNAME_REGISTRY or PASSWORD_REGISTRY not defined. Please set them in .env.local");
   if (!process.env["SKIP_AUTH"]) {
     process.exit(1);
   }
 }
 
-const image = process.argv[2];
-if (image === undefined) {
-  console.error("Usage: bun run index.ts <image>");
+const arg = process.argv[2];
+if (arg === undefined) {
+  console.error("Usage: bun run index.ts <registry>/<image>");
   process.exit(1);
 }
+
+const [registry, ...imageParts] = arg.split('/');
+if (!registry || imageParts.length === 0) {
+  console.error("Invalid argument. Expected <registry>/<image>");
+  process.exit(1);
+}
+const imageName = imageParts.join('/');
+const image = `${registry}/${imageName}`;
 
 // Check if the image has already been saved from Docker
 
