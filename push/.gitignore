@@ -171,4 +171,4 @@ dist
 *.tar
 
 # Compiled executable
-push
+regpush
