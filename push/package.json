@@ -2,6 +2,9 @@
   "name": "push",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "build": "bun build --compile index.ts --outfile push-executable"
+  },
   "devDependencies": {
     "@types/tar-fs": "^2.0.4",
     "bun-types": "latest"
@@ -10,6 +13,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "dotenv": "^17.2.2",
     "node-fetch": "^3.3.2",
     "p-limit": "^6.1.0",
     "tar": "^7.4.3"

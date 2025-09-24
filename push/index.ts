@@ -3,12 +3,19 @@ import { extract } from "tar";
 
 import stream from "node:stream";
 import { mkdir } from "node:fs/promises";
+import path from "path";
+import { config as dotenvConfig } from "dotenv";
+import { homedir } from "node:os";
+
+// Load .env from the user's home directory
+const envPath = path.join(homedir(), ".push", ".env");
+dotenvConfig({ path: envPath });
 
 const username = process.env["USERNAME_REGISTRY"];
 const password = process.env["PASSWORD_REGISTRY"];
 
 if (!username || !password) {
-  console.error("USERNAME_REGISTRY or PASSWORD_REGISTRY not defined. Please set them in .env.local");
+  console.error("USERNAME_REGISTRY or PASSWORD_REGISTRY not defined. Please set them in ~/.push/.env");
   if (!process.env["SKIP_AUTH"]) {
     process.exit(1);
   }
@@ -77,7 +84,6 @@ type DockerSaveConfigManifest = {
   Layers: string[];
 }[];
 
-import path from "path";
 const manifests = (await Bun.file(path.join(imagePath, "manifest.json")).json()) as DockerSaveConfigManifest;
 
 if (manifests.length == 0) {
